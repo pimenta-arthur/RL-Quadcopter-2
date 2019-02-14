@@ -41,7 +41,7 @@ class PolicySearch_Agent():
     def act(self, state):
         # Choose action based on given state and policy
         action = np.dot(state, self.w)  # simple linear policy
-        return action
+        return action, state, self.w
 
     def learn(self):
         # Learn by random policy search, using a reward-based score
