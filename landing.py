@@ -5,7 +5,7 @@ class Landing():
     """Task (environment) that defines the goal and provides feedback to the agent."""
     def __init__(self, init_pose=None, init_velocities=None, 
         init_angle_velocities=None, runtime=5., touching_surface=None,
-        threshold_velocity=None, threshold_distance=None):
+        threshold_velocity=None, threshold_side_distance=None):
         """Initialize a Landing object.
         Params
         ======
@@ -17,7 +17,7 @@ class Landing():
         """
         # Simulation
         self.init_pose = np.array([0.0, 0.0, 10.0, 0.0, 0.0, 0.0]) if init_pose is None else np.copy(init_pose)
-        self.sim = PhysicsSim(init_pose, self.init_velocities, init_angle_velocities, runtime) 
+        self.sim = PhysicsSim(init_pose, init_velocities, init_angle_velocities, runtime) 
         self.action_repeat = 3
 
         self.state_size = self.action_repeat * 6
@@ -30,19 +30,19 @@ class Landing():
         self.distance= abs(self.target_pos-self.init_pose[:3]).sum()
         self.touching_surface = touching_surface if touching_surface is not None else 3
         self.threshold_velocity = threshold_velocity if threshold_velocity is not None else 5
-        self.threshold_distance = threshold_distance if threshold_distance is not None else 3
+        self.threshold_side_distance = threshold_side_distance if threshold_side_distance is not None else 3
 
     def get_reward(self):
         """Uses current pose of sim to return reward."""
-        if (self.sim.pose[3] < self.touching_surface): # position z < touching suface limit
-            if (self.sim.v[2] < self.threshold_velocity): # velocity z < treshold velocity
+        if (self.sim.pose[2] < self.touching_surface): # position z < touching suface limit
+            if (abs(self.sim.v[2]) < abs(self.threshold_velocity)): # velocity z < treshold velocity
                 landing_reward = 10.0
-                reward = landing_reward * (1-(self.sim.pose[3]/self.distance)**.4)
-                reward += -abs(self.sim.linear_accel[2]) # discount z acceleration
+                reward = landing_reward * (1-(self.sim.pose[2]/self.distance)**.4)
+#                 reward += -abs(self.sim.linear_accel[2]) # discount z acceleration
             else:
                 reward = -10.0
         else: 
-            reward = 1-(self.sim.pose[3]/self.distance)**.4
+            reward = 1-(self.sim.pose[2]/self.distance)**.4
 
         return reward
 
@@ -57,16 +57,16 @@ class Landing():
         next_state = np.concatenate(pose_all)
         
         # positive terminals
-        if (self.sim.pose[3] == self.target_pos[3]): # stop if it reachs the target
-            reward += 10.0  # bonus reward
+        if (self.sim.pose[2] == self.target_pos[2]): # stop if it reachs the target
+            reward += 100.0  # bonus reward
             done = True
             
         # negative terminals
-        if (self.sim.pose[3] > self.init_pose[3]+1): # stop if it goes up
-            reward = -10.0
+        if (self.sim.pose[2] > self.init_pose[2]+1): # stop if it goes up
+            reward = -100.0
             done = True
-        elif (np.linalg.norm(self.init_pose[:2]-self.sim.pose[:2]) > self.threshold_distance): # stop if it goes too much to the side 
-            reward = -10.0
+        elif (np.linalg.norm(self.init_pose[:2]-self.sim.pose[:2]) > self.threshold_side_distance): # stop if it goes too much to the side 
+            reward = -100.0
             done = True
         else:
             pass

@@ -1,9 +1,9 @@
 import numpy as np
 from keras import layers, models, optimizers
 from keras import backend as K
-from actor_critic import Actor, Critic
-from ounoise import OUNoise
-from replaybuffer import ReplayBuffer
+from agents.actor_critic import Actor, Critic
+from agents.ounoise import OUNoise
+from agents.replaybuffer import ReplayBuffer
 
 class DDPG():
     """Reinforcement Learning agent that learns using DDPG."""
