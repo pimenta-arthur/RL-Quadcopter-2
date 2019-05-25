@@ -35,7 +35,7 @@ class Landing():
     def get_reward(self):
         """Uses current pose of sim to return reward."""
         if (self.sim.pose[2] < self.touching_surface): # position z < touching suface limit
-            reward = 100 * (1-(self.sim.pose[2]/self.distance)**.4) - max(abs(self.sim.v[2]), .1)
+            reward = 100 * (1-(self.sim.pose[2]/self.distance)**.4) - max(abs(self.sim.linear_accel[2]), .1)
 # #             if (abs(self.sim.v[2]) < abs(self.threshold_velocity)): # velocity z < treshold velocity
 # #                 landing_reward = 10.0
 # #                 reward = landing_reward * (1-(self.sim.pose[2]/self.distance)**.4) * (1-(abs(self.sim.v[2])/self.threshold_velocity))
@@ -59,21 +59,21 @@ class Landing():
             pose_all.append(self.sim.pose)
         next_state = np.concatenate(pose_all)
         
-        # positive terminals
-#         if (self.sim.pose[2] == self.target_pos[2]): # stop if it reachs the target
-#             reward += 100.0  # bonus reward
-#             done = True
+#         positive terminals
+        if (self.sim.pose[2] == self.target_pos[2]): # stop if it reachs the target
+            reward += 100.0  # bonus reward
+            done = True
             
-        # negative terminals
-#         if (self.sim.pose[2] > self.init_pose[2]): # stop if it goes up
-#             reward -= 100
-#             done = True
-#         # stop if it goes too much to the side 
-#         if (np.linalg.norm(self.init_pose[:2]-self.sim.pose[:2]) > self.threshold_side_distance): 
-#             reward -= 100
-#             done = True
-#         else:
-#             pass
+#         negative terminals
+        if (self.sim.pose[2] > self.init_pose[2]+5): # stop if it goes up
+            reward -= 100
+            done = True
+        # stop if it goes too much to the side 
+        if (np.linalg.norm(self.init_pose[:2]-self.sim.pose[:2]) > self.threshold_side_distance): 
+            reward -= 100
+            done = True
+        else:
+            pass
             
         return next_state, reward, done
 
