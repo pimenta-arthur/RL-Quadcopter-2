@@ -14255,7 +14255,7 @@ If it's not a terminal stage we keep the returned reward between -1 and 1 until 
 <li><p>What neural network architecture did you use (if any)? Specify layers, sizes, activation functions, etc. <br>
 <strong>Answer</strong>: <br>
 In the beginning I din't realize this was a continious action space problem, so I started the projeto with the Deep Q Network” (DQN) algorithm which is a great algorithm that solves problems with high-dimensional observation spaces, however it can only handle discrete and low-dimensional action spaces, so later on I switched to the DDPG algorithm a algorithm based on the deterministic policy gradient that can operate over continuous action spaces. I ended up with the hyperparameters of gamma: 0.9 (reward discount), tau: 0.01 (for soft upd), buffer_size: 100000, batch_size: 64, lr: 0.001 (learning rate). I used Dense Neural Network the layers are fully connected by the neurons in a network layer, each neuron in a layer receives an input from all the neurons present in the previous layer. The mode was created with 3 layers with our first layer containing 32 neurons and the sigmoid as the last layer activation function.</p>
-<p>Referênces: <br>
+<p>References: <br>
 [1] <a href="https://arxiv.org/pdf/1509.06461.pdf">https://arxiv.org/pdf/1509.06461.pdf</a> <br>
 [2] <a href="https://heartbeat.fritz.ai/classification-with-tensorflow-and-dense-neural-networks-8299327a818a">https://heartbeat.fritz.ai/classification-with-tensorflow-and-dense-neural-networks-8299327a818a</a></p>
 </li>
