@@ -36,16 +36,8 @@ class Landing():
         """Uses current pose of sim to return reward."""
         if (self.sim.pose[2] < self.touching_surface): # position z < touching suface limit
             reward = 100 * (1-(self.sim.pose[2]/self.distance)**.4) - max(abs(self.sim.linear_accel[2]), .1)
-# #             if (abs(self.sim.v[2]) < abs(self.threshold_velocity)): # velocity z < treshold velocity
-# #                 landing_reward = 10.0
-# #                 reward = landing_reward * (1-(self.sim.pose[2]/self.distance)**.4) * (1-(abs(self.sim.v[2])/self.threshold_velocity))
-# # #                 reward += -abs(self.sim.linear_accel[2]) # discount z acceleration
-# # #                 reward = landing_reward * (1-(abs(self.sim.v[2]/abs(self.threshold_velocity))**.4)
-#             else:
-# #                 reward = -10.0
         else: 
             reward = (1-(self.sim.pose[2]/self.distance)**.4)
-#             reward = -min(self.sim.pose[2], self.distance)
 
         return reward
 
